@@ -1,15 +1,15 @@
 """implement multiprocessing"""
-import multiprocessing as mp
+from multiprocessing import Queue, Process, current_process, Pool, cpu_count
 import time
 
 # Function to process a job
 
 
-def job(job_data, current_process):
+def job(job_data):
     # Simulate some processing time
-    print(f"Job {job_data} is processing... in {current_process.name}\n")
+    print(f"Job {job_data} is processing in {current_process().name}\n")
     time.sleep(2)
-    print(f"Job {job_data} is completed by {current_process.name}\n")
+    print(f"Job {job_data} is completed by {current_process().name}\n")
 
 
 def worker_process(mpQueue):
@@ -18,33 +18,34 @@ def worker_process(mpQueue):
         if job_data == "end":
             # Exit the process if None is received (a signal to terminate)
             break
-        job(job_data, mp.current_process())
+        job(job_data)
 
 
 if __name__ == "__main__":
-    print('number of cpu:', mp.cpu_count())
-    pool = mp.Pool(processes=2)
-    mpQueue = mp.Queue()
-    # print("hello")
-    # worker_process()
+    print('number of cpu:', cpu_count())
+    number_of_processes = int(input("Enter number of processes "))
+    processing_time_start = time.perf_counter()
+    pool = Pool(processes=number_of_processes)
+    mpQueue = Queue()
 
-    process_1 = mp.Process(target=worker_process, args=[mpQueue])
-    process_2 = mp.Process(target=worker_process, args=[mpQueue])
+    processes = []
 
-    process_1.start()
-    process_2.start()
+    for i in range(number_of_processes):
+        processes.append(Process(target=worker_process, args=[mpQueue]))
 
-    # Push jobs to the worker processes
-    jobs = [1, 2, 3, 4, 5]
+    for process in processes:
+        process.start()
+    
+    jobs = ["Data 1", "Data 2", "Data 3", "Data 4", "Data 5"]
     for job_data in jobs:
         mpQueue.put(job_data)
 
-    # Signal the worker processes to terminate
-    mpQueue.put("end")
-    mpQueue.put("end")
+    for i in range(number_of_processes):
+        mpQueue.put("end")
 
-    process_1.join()
-    process_2.join()
+    for process in processes:
+        process.join()
 
     pool.close()
     pool.join()
+    print(f"Processing time with {number_of_processes} processes: {time.perf_counter() - processing_time_start}")
