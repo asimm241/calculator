@@ -1,30 +1,19 @@
-from enum import Enum
+"""Calculator View"""
 from PySide6 import QtCore, QtWidgets
 from calculator_controller import CalculatorController
 from calculator_model import CalculatorModel
-
-
-class ArithOp(Enum):
-    """Operations"""
-    PLUS = "+"
-    MINUS = "-"
-    MULTIPLY = "*"
-    DIVIDE = "/"
-    NONE = ""
+from shared import ArithOp
 
 
 class Calculator(QtWidgets.QWidget):
     """This widget is a calculator"""
 
-    def __init__(self):
+    def __init__(self, model: CalculatorModel, controller: CalculatorController):
         super().__init__()
 
-        # self.result = 0
-        # self.operation = ArithOp.NONE
-        # self.append_digit = False
         self.digits_buttons = []
-        self._model = CalculatorModel()
-        self._controller = CalculatorController(self._model)
+        self._model = model
+        self._controller = controller
 
         self.plus_btn = QtWidgets.QPushButton("+")
         self.minus_btn = QtWidgets.QPushButton("-")
@@ -36,21 +25,8 @@ class Calculator(QtWidgets.QWidget):
         for i in range(0, 10):
             self.digits_buttons.append(QtWidgets.QPushButton(str(i)))
 
-        # self.zero_btn = QtWidgets.QPushButton("0")
-        # self.one_btn = QtWidgets.QPushButton("1")
-        # self.two_btn = QtWidgets.QPushButton("2")
-        # self.three_btn = QtWidgets.QPushButton("3")
-        # self.four_btn = QtWidgets.QPushButton("4")
-        # self.five_btn = QtWidgets.QPushButton("5")
-        # self.six_btn = QtWidgets.QPushButton("6")
-        # self.seven_btn = QtWidgets.QPushButton("7")
-        # self.eight_btn = QtWidgets.QPushButton("8")
-        # self.nine_btn = QtWidgets.QPushButton("9")
-
         self.display = QtWidgets.QLabel(
             "0", alignment=QtCore.Qt.AlignmentFlag.AlignRight)
-
-        # self.layout = QtWidgets.QVBoxLayout(self)
 
         self.grid_layout = QtWidgets.QGridLayout(self)
         self.grid_layout.addWidget(self.display, 0, 0, 1, 4)
@@ -91,60 +67,6 @@ class Calculator(QtWidgets.QWidget):
 
         self._model._display_text.connect(self.update_result)
 
-        # self.zero_btn.clicked.connect(self.digit_click_factory("0"))
-        # self.one_btn.clicked.connect(self.digit_click_factory("1"))
-        # self.two_btn.clicked.connect(self.digit_click_factory("2"))
-        # self.three_btn.clicked.connect(self.digit_click_factory("3"))
-        # self.four_btn.clicked.connect(self.digit_click_factory("4"))
-        # self.five_btn.clicked.connect(self.digit_click_factory("5"))
-        # self.six_btn.clicked.connect(self.digit_click_factory("6"))
-        # self.seven_btn.clicked.connect(self.digit_click_factory("7"))
-        # self.eight_btn.clicked.connect(self.digit_click_factory("8"))
-        # self.nine_btn.clicked.connect(self.digit_click_factory("9"))
-
-    # def equal_clicked(self):
-    #     """equal button clicked on calculator"""
-    #     if self.operation == ArithOp.PLUS:
-    #         self.result = self.result + float(self.result_txt.text())
-    #     elif self.operation == ArithOp.MINUS:
-    #         self.result = self.result - float(self.result_txt.text())
-    #     elif self.operation == ArithOp.MULTIPLY:
-    #         self.result = self.result * float(self.result_txt.text())
-    #     elif self.operation == ArithOp.DIVIDE:
-    #         self.result = self.result / float(self.result_txt.text())
-    #     if self.result.is_integer():
-    #         self.result_txt.setText(str(int(self.result)))
-    #     else:
-    #         self.result_txt.setText(str(self.result))
-    #     self.operation = ArithOp.NONE
-    #     self.append_digit = False
-
-    # def c_clicked(self):
-        # """c button clicked on calculator"""
-        # self.result = 0
-        # self.result_txt.setText(f"{self.result}")
-        # self.append_digit = False
-
-    # def operation_clicked(self, arith_op):
-    #     """an arithmetic operation button clicked"""
-    #     def handle_operation():
-    #         self.operation = arith_op
-    #         self.result = float(self.result_txt.text())
-    #         self.append_digit = False
-    #     return handle_operation
-
     def update_result(self, text):
         "update calculator display"
         self.display.setText(text)
-
-    # def digit_click_factory(self, digit):
-    #     """digit button clicked on calculator"""
-    #     def digit_clicked():
-    #         final_digits = digit
-    #         if self.append_digit:
-    #             operand = self.result_txt.text()
-    #             operand = operand + digit
-    #             final_digits = int(operand)
-    #         self.result_txt.setText(f"{final_digits}")
-    #         self.append_digit = True
-    #     return digit_clicked

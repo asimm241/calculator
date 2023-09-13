@@ -15,13 +15,13 @@ class CalculatorController:
         prev_operand = self.model.get_operand()
         new_operand = float(self.model.get_display())
         operation = self.model.get_operation()
-        if operation == ArithOp.PLUS.value:
+        if operation == ArithOp.PLUS:
             result = prev_operand + new_operand
-        elif operation == ArithOp.MINUS.value:
+        elif operation == ArithOp.MINUS:
             result = prev_operand - new_operand
-        elif operation == ArithOp.MULTIPLY.value:
+        elif operation == ArithOp.MULTIPLY:
             result = prev_operand * new_operand
-        elif operation == ArithOp.DIVIDE.value:
+        elif operation == ArithOp.DIVIDE:
             result = prev_operand / new_operand
 
         self.model.set_display(result)

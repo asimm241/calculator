@@ -40,4 +40,4 @@ class CalculatorModel(QObject):
 
     def get_operation(self):
         """get operation"""
-        return self.operation.value
+        return self.operation
